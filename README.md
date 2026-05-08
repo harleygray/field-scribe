@@ -139,14 +139,12 @@ The audio is fetched from Phoenix by Apps Script via a URL signed with an HMAC a
 Production runs on [Fly.io](https://fly.io) in Sydney. The first-time setup is one-time:
 
 ```bash
-fly launch --no-deploy --copy-config
-fly postgres attach civic-forum-db --app fieldscribe --database-name fieldscribe_prod
-fly secrets set \
+fly apps create field-scribe --org personal
+fly postgres attach civic-forum-db --app field-scribe --database-name fieldscribe_prod
+fly secrets set --app field-scribe \
   OPENAI_API_KEY=… \
   APPS_SCRIPT_WEBHOOK_URL=… \
   APPS_SCRIPT_SHARED_SECRET=… \
-  APPS_SCRIPT_CALLBACK_SECRET=… \
-  AUDIO_URL_SECRET=… \
   SECRET_KEY_BASE=$(mix phx.gen.secret)
 fly deploy
 ```

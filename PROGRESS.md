@@ -77,7 +77,7 @@ APPS_SCRIPT_SHARED_SECRET=<matches SHARED_SECRET Script Property>
 - Phoenix-generated error tests retained
 
 ### Deployment scaffold
-- `Dockerfile`, `fly.toml` (`app=fieldscribe`, `primary_region=syd`), `rel/env.sh.eex`, `lib/fieldscribe/release.ex`
+- `Dockerfile`, `fly.toml` (`app=field-scribe`, `primary_region=syd`), `rel/env.sh.eex`, `lib/fieldscribe/release.ex`
 
 ---
 
@@ -87,7 +87,7 @@ APPS_SCRIPT_SHARED_SECRET=<matches SHARED_SECRET Script Property>
 - [x] Deploy `priv/apps_script/Code.gs` as Web App ✅
 - [x] Set Script Properties: `SHARED_SECRET`, `SHEET_ID` ✅
 - [x] Create `Daily Log` and `Blockers Triage` tabs ✅ (headers auto-created on first write)
-- [ ] First Fly deploy: `fly launch --no-deploy --copy-config` → `fly postgres attach civic-forum-db --app fieldscribe --database-name fieldscribe_prod` → `fly secrets set …` → `fly deploy`
+- [ ] First Fly deploy: `fly launch --no-deploy --copy-config` → `fly postgres attach civic-forum-db --app field-scribe --database-name fieldscribe_prod` → `fly secrets set …` → `fly deploy`
 - [ ] Confirm end-to-end on deployed environment
 
 ### Code polish
