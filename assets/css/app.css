@@ -1,0 +1,433 @@
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
+
+@import "tailwindcss" source(none);
+@source "../css";
+@source "../js";
+@source "../../lib/fieldscribe_web";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
+/* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:
+   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
+   Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
+@plugin "../vendor/daisyui" {
+  themes: false;
+}
+
+/* daisyUI theme plugin. You can update this file by fetching the latest version with:
+  curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
+  We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
+  on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
+@plugin "../vendor/daisyui-theme" {
+  name: "dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(30.33% 0.016 252.42);
+  --color-base-200: oklch(25.26% 0.014 253.1);
+  --color-base-300: oklch(20.15% 0.012 254.09);
+  --color-base-content: oklch(97.807% 0.029 256.847);
+  --color-primary: oklch(58% 0.233 277.117);
+  --color-primary-content: oklch(96% 0.018 272.314);
+  --color-secondary: oklch(58% 0.233 277.117);
+  --color-secondary-content: oklch(96% 0.018 272.314);
+  --color-accent: oklch(60% 0.25 292.717);
+  --color-accent-content: oklch(96% 0.016 293.756);
+  --color-neutral: oklch(37% 0.044 257.287);
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(60% 0.118 184.704);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(98% 0 0);
+  --color-base-200: oklch(96% 0.001 286.375);
+  --color-base-300: oklch(92% 0.004 286.32);
+  --color-base-content: oklch(21% 0.006 285.885);
+  --color-primary: oklch(52% 0.15 142);
+  --color-primary-content: oklch(98% 0.014 180.72);
+  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary-content: oklch(98% 0.002 247.839);
+  --color-accent: oklch(0% 0 0);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(44% 0.017 285.786);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+
+/* Use the data attribute for dark mode  */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session], [data-phx-teleported-src] { display: contents }
+
+/* ===================================================================
+   FieldScribe — page layout + components
+   =================================================================== */
+
+:root {
+  --fs-primary: rgb(46, 139, 59);
+  --fs-primary-dark: rgb(34, 104, 44);
+  --fs-bg: #fafaf9;
+  --fs-text: #111827;
+  --fs-muted: #6b7280;
+  --fs-border: #e5e7eb;
+  --fs-card: #ffffff;
+}
+
+html, body {
+  background: var(--fs-bg);
+  color: var(--fs-text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page__header {
+  background: var(--fs-primary);
+  color: white;
+  padding: 0.65rem 0.75rem;
+}
+.page__header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.6rem 0.6rem;
+  overflow: hidden;
+}
+.page__header h1 { font-size: 1.25rem; font-weight: 700; margin: 0; white-space: nowrap; }
+.page__tagline { font-size: 0.85rem; opacity: 0.85; margin: 0; min-width: 0; }
+@media (max-width: 540px) {
+  .page__header h1 { font-size: 0.85rem; }
+  .page__tagline { font-size: 0.55rem; }
+}
+
+.page__main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(280px, 1.2fr) minmax(280px, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+@media (max-width: 960px) {
+  .page__main { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--fs-card);
+  border: 1px solid var(--fs-border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.panel h2 { font-size: 1rem; font-weight: 600; margin: 0; }
+
+/* ----- form ----- */
+.panel--form form { display: flex; flex-direction: column; gap: 0.75rem; }
+.panel--form label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; }
+.panel--form select,
+.panel--form input[type=text] {
+  border: 1px solid var(--fs-border);
+  border-radius: 0.25rem;
+  padding: 0.4rem 0.5rem;
+  font: inherit;
+}
+
+.record-tips {
+  background: oklch(97% 0.025 142);
+  border: 1px solid oklch(88% 0.06 142);
+  border-radius: 0.35rem;
+  padding: 0.55rem 0.75rem;
+}
+.record-tips__heading {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fs-primary-dark);
+  margin: 0 0 0.35rem;
+}
+.record-tips__list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.78rem;
+  color: var(--fs-text);
+}
+
+.recorder { display: flex; flex-direction: column; gap: 0.5rem; }
+.recorder__actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.recorder__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--fs-primary);
+  background: white;
+  color: var(--fs-primary);
+  cursor: pointer;
+  font: inherit;
+}
+.recorder__btn--recording { background: var(--fs-primary); color: white; }
+.recorder__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.recorder__btn--recording .recorder__dot { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.recorder__status { font-size: 0.8rem; color: var(--fs-muted); margin: 0; }
+.recorder audio { width: 100%; }
+
+.primary-btn {
+  background: var(--fs-primary);
+  color: white;
+  border: 0;
+  border-radius: 0.25rem;
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  cursor: pointer;
+}
+.primary-btn:disabled { background: var(--fs-muted); cursor: not-allowed; }
+
+/* ----- "your submissions" ----- */
+.my-submissions { border-top: 1px solid var(--fs-border); padding-top: 0.75rem; }
+.my-submissions h3 { font-size: 0.85rem; margin: 0 0 0.5rem; color: var(--fs-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.my-submissions ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.my-submissions li { font-size: 0.8rem; }
+.my-submissions__head { display: flex; justify-content: space-between; gap: 0.5rem; }
+.my-submissions__time { color: var(--fs-muted); font-size: 0.75rem; }
+.my-submissions__meta { color: var(--fs-muted); font-size: 0.75rem; }
+.my-submissions__preview { margin: 0.25rem 0; color: var(--fs-text); }
+.my-submissions__links { display: flex; gap: 0.75rem; }
+.my-submissions__links a { color: var(--fs-primary); text-decoration: none; font-size: 0.78rem; }
+.my-submissions__links a:hover { text-decoration: underline; }
+
+/* ----- pipeline feed ----- */
+.feed { display: flex; flex-direction: column; gap: 0.5rem; max-height: 70vh; overflow-y: auto; overflow-x: hidden; }
+.card {
+  border: 1px solid var(--fs-border);
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.75rem;
+  background: #fcfcfc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.card__head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.card__type { font-size: 0.85rem; font-weight: 600; }
+.card__meta { font-size: 0.75rem; color: var(--fs-muted); }
+.card__transcript { font-size: 0.82rem; margin: 0; color: var(--fs-text); }
+.card__foot { display: flex; gap: 0.75rem; font-size: 0.75rem; }
+.card__foot a { color: var(--fs-primary); text-decoration: none; }
+.card__foot a:hover { text-decoration: underline; }
+
+.card__structured { font-size: 0.78rem; }
+.card__structured > summary {
+  cursor: pointer;
+  color: var(--fs-muted);
+  font-weight: 600;
+  user-select: none;
+}
+.card__structured > summary:hover { color: var(--fs-text); }
+.card__structured pre {
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0.65rem;
+  background: #f4f4f5;
+  border: 1px solid var(--fs-border);
+  border-radius: 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.card__fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.5rem;
+  font-size: 0.78rem;
+  margin: 0;
+}
+.card__field { display: contents; }
+.card__field dt { color: var(--fs-muted); white-space: nowrap; font-weight: 600; text-transform: capitalize; }
+.card__field dd { margin: 0; word-break: break-word; }
+
+.card__errors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+}
+.card__errors-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: baseline;
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.3rem;
+  border: 1px solid transparent;
+}
+.card__errors-item--info  { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+.card__errors-item--warn  { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.card__errors-item--error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.card__errors-stage { font-weight: 600; text-transform: lowercase; }
+.card__errors-kind { font-family: ui-monospace, SFMono-Regular, monospace; opacity: 0.85; }
+.card__errors-reason { opacity: 0.9; word-break: break-word; }
+
+.fs-status {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  background: var(--fs-border);
+  color: var(--fs-text);
+  margin-left: auto;
+}
+.fs-status--received     { background: #e5e7eb; color: #374151; }
+.fs-status--transcribing { background: #dbeafe; color: #1d4ed8; }
+.fs-status--extracting   { background: #ede9fe; color: #5b21b6; }
+.fs-status--writing      { background: #fef3c7; color: #92400e; }
+.fs-status--persisted    { background: #d1fae5; color: #065f46; }
+.fs-status--complete     { background: var(--fs-primary); color: white; }
+.fs-status--failed       { background: #fee2e2; color: #991b1b; }
+
+/* ----- architecture diagram ----- */
+.arch-svg {
+  width: 100%;
+  height: auto;
+  color: var(--fs-muted);
+}
+.arch-svg .node rect {
+  fill: white;
+  stroke: var(--fs-border);
+  stroke-width: 1.5;
+  transition: stroke 0.3s, fill 0.3s;
+}
+.arch-svg .node text { font-size: 12px; fill: var(--fs-text); font-weight: 600; }
+.arch-svg .node .node__sub { font-size: 9px; font-weight: 400; fill: var(--fs-muted); }
+.arch-svg .node--active rect {
+  stroke: var(--fs-primary);
+  stroke-width: 2.5;
+  fill: oklch(96% 0.05 145);
+  animation: node-pulse 1.4s ease-in-out infinite;
+}
+@keyframes node-pulse {
+  0%, 100% { stroke-opacity: 1; }
+  50%      { stroke-opacity: 0.45; }
+}
+.arch-svg .arch-container rect {
+  fill: oklch(97% 0.025 290);
+  stroke: oklch(70% 0.09 290);
+  stroke-width: 1.5;
+}
+.arch-svg .arch-label {
+  font-size: 13px;
+  font-weight: 700;
+  fill: oklch(38% 0.16 290);
+  letter-spacing: 0.05em;
+}
+.arch-svg .arch-sep {
+  stroke: oklch(70% 0.09 290);
+  stroke-opacity: 0.35;
+}
+
+.explainer { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.explainer__tab {
+  border: 1px solid var(--fs-primary);
+  background: transparent;
+  color: var(--fs-primary);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font: inherit;
+}
+.explainer__tab--active { background: var(--fs-primary); color: white; }
+.explainer__body { font-size: 0.85rem; line-height: 1.5; color: var(--fs-text); }
+.explainer__body p { margin: 0 0 0.6rem; }
+.explainer__body p:last-child { margin-bottom: 0; }
+.explainer__lead { font-weight: 600; }
+.explainer__list { margin: 0 0 0.6rem; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.explainer__body a { color: var(--fs-primary); text-decoration: underline; }
+.explainer__body a:hover { opacity: 0.75; }
+.explainer__body code {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  background: var(--fs-border);
+  padding: 0.05rem 0.25rem;
+  border-radius: 0.2rem;
+  font-size: 0.78rem;
+}
+
